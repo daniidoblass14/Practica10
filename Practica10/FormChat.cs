@@ -51,113 +51,58 @@ namespace Practica10
 
         private void btnEnviarMensaje_Click(object sender, EventArgs e)
         {
-            serialPort.WriteLine(textBoxMensajes.Text);
+           serialPort.WriteLine($"[{DateTime.Now}] {textBoxMensajes.Text}{Environment.NewLine}");
         }
 
         private void enviarFicheroToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Archivos de texto (*.txt)|*.txt|Todos los archivos (*.*)|*.*";
-            openFileDialog.FilterIndex = 1;
-            openFileDialog.RestoreDirectory = true;
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            if (serialPort != null)
             {
-                DialogResult result = MessageBox.Show("Desea visualizar el contenido?", "Mensaje", MessageBoxButtons.YesNo);
-
-                if (result == DialogResult.Yes)
+                if (!serialPort.IsOpen)
                 {
                     try
                     {
-                        // Nombre del archivo a enviar
-                        string fileName = openFileDialog.FileName;
-
-                        // Abrir el archivo
-                        using (FileStream fs = new FileStream(fileName, FileMode.Open))
-                        {
-                            // Leer los bytes del archivo
-                            byte[] buffer = new byte[fs.Length];
-                            fs.Read(buffer, 0, (int)fs.Length);
-
-                            // Enviar los bytes del archivo a través del puerto serie
-                            serialPort.Write(buffer, 0, buffer.Length);
-                        }
-
-                        MessageBox.Show("El archivo ha sido enviado correctamente.");
-
-                        SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-
-                        saveFileDialog1.Filter = "Archivos de texto (*.txt)|*.txt|Todos los archivos (*.*)|*.*";
-                        saveFileDialog1.FilterIndex = 1;
-                        saveFileDialog1.RestoreDirectory = true;
-
-                        // Obtener el nombre del archivo seleccionado con la extensión
-                        string nombreArchivo = Path.GetFileName(openFileDialog.FileName);
-
-                        // Establecer el nombre de archivo predeterminado en el diálogo "Guardar como"
-                        saveFileDialog1.FileName = nombreArchivo;
-
-                        if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            // Guardar el archivo en la ruta seleccionada
-                            string ruta_archivo = saveFileDialog1.FileName;
-
-                            // Abrir el archivo seleccionado en el diálogo de "Abrir"
-                            using (FileStream fs = new FileStream(openFileDialog.FileName, FileMode.Open))
-                            {
-                                // Leer los bytes del archivo
-                                byte[] buffer = new byte[fs.Length];
-                                fs.Read(buffer, 0, (int)fs.Length);
-
-                                // Escribir los bytes del archivo en el archivo guardado
-                                using (FileStream fs2 = new FileStream(ruta_archivo, FileMode.Create))
-                                {
-                                    fs2.Write(buffer, 0, buffer.Length);
-                                }
-                            }
-                            MessageBox.Show("El archivo se ha guardado exitosamente en la siguiente ruta: " + ruta_archivo, "Mensaje", MessageBoxButtons.OK);
-                        }
+                        serialPort.Open();
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Error al enviar el archivo: " + ex.Message);
+                        MessageBox.Show("No se pudo abrir el puerto serie: " + ex.Message);
+                        return;
                     }
                 }
-                else if (result == DialogResult.No)
+
+                // Mostrar el diálogo para seleccionar el archivo
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                    // Leer el archivo
+                    byte[] contenido = File.ReadAllBytes(openFileDialog.FileName);
 
-                    saveFileDialog1.Filter = "Archivos de texto (*.txt)|*.txt|Todos los archivos (*.*)|*.*";
-                    saveFileDialog1.FilterIndex = 1;
-                    saveFileDialog1.RestoreDirectory = true;
-
-                    // Obtener el nombre del archivo seleccionado con la extensión
-                    string nombreArchivo = Path.GetFileName(openFileDialog.FileName);
-
-                    // Establecer el nombre de archivo predeterminado en el diálogo "Guardar como"
-                    saveFileDialog1.FileName = nombreArchivo;
-
-                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                    // Preguntar si el usuario quiere descargar el archivo
+                    if (MessageBox.Show("¿Quieres descargar el archivo?", "Descargar archivo", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        // Guardar el archivo en la ruta seleccionada
-                        string ruta_archivo = saveFileDialog1.FileName;
+                        // Mostrar el diálogo para seleccionar la ruta de descarga
+                        serialPort.Write("Archivo recibido");
+                        SaveFileDialog saveFileDialog = new SaveFileDialog();
 
-                        // Abrir el archivo seleccionado en el diálogo de "Abrir"
-                        using (FileStream fs = new FileStream(openFileDialog.FileName, FileMode.Open))
+                        saveFileDialog.Filter = "Archivos PNG (*.png)|*.png|Archivos JPEG (*.jpeg;*.jpg)|*.jpeg;*.jpg|Archivos de texto (*.txt)|*.txt|Archivos PDF (*.pdf)|*.pdf|Documentos Word (*.docx)|*.docx|Hojas de cálculo Excel (*.xlsx)|*.xlsx|Archivos de audio MP3 (*.mp3)|*.mp3|Archivos de audio WAV (*.wav)|*.wav|Accesos directos de Windows (*.lnk)|*.lnk";
+
+                        if (saveFileDialog.ShowDialog() == DialogResult.OK)
                         {
-                            // Leer los bytes del archivo
-                            byte[] buffer = new byte[fs.Length];
-                            fs.Read(buffer, 0, (int)fs.Length);
+                            // Escribir el contenido del archivo en la ruta seleccionada
+                            File.WriteAllBytes(saveFileDialog.FileName, contenido);
 
-                            // Escribir los bytes del archivo en el archivo guardado
-                            using (FileStream fs2 = new FileStream(ruta_archivo, FileMode.Create))
-                            {
-                                fs2.Write(buffer, 0, buffer.Length);
-                            }
+                            Invoke(new Action(() => richText.AppendText($"Yo: [archivo enviado] ({DateTime.Now.ToString()})\n")));
+                            richText.Refresh();
                         }
-                        MessageBox.Show("El archivo se ha guardado exitosamente en la siguiente ruta: " + ruta_archivo, "Mensaje", MessageBoxButtons.OK);
                     }
                 }
+            }
+            else
+            {
+                MessageBox.Show("El puerto serie no está conectado.");
+                textBoxMensajes.Clear();
+                textBoxMensajes.Refresh();
             }
         }
 
@@ -166,16 +111,6 @@ namespace Practica10
         {
 
             dll.MessageSalir();
-        }
-
-        private void configConexionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            nuevaConexion();
-        }
-
-        private void nuevaConexion()
-        {
-           new FormConfig().ShowDialog();
         }
     }
 }

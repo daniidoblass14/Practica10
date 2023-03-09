@@ -37,13 +37,11 @@
             this.acercaDeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.acercaDeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.configConexionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.salirToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.salirToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.salirToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -89,8 +87,6 @@
             this.acercaDeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.acercaDeToolStripMenuItem1,
             this.toolStripSeparator1,
-            this.configConexionToolStripMenuItem,
-            this.toolStripSeparator2,
             this.salirToolStripMenuItem1,
             this.toolStripSeparator3,
             this.salirToolStripMenuItem2});
@@ -110,18 +106,6 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(221, 6);
             // 
-            // configConexionToolStripMenuItem
-            // 
-            this.configConexionToolStripMenuItem.Name = "configConexionToolStripMenuItem";
-            this.configConexionToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.configConexionToolStripMenuItem.Text = "Config. Conexion";
-            this.configConexionToolStripMenuItem.Click += new System.EventHandler(this.configConexionToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(221, 6);
-            // 
             // salirToolStripMenuItem1
             // 
             this.salirToolStripMenuItem1.Name = "salirToolStripMenuItem1";
@@ -129,13 +113,10 @@
             this.salirToolStripMenuItem1.Text = "Enviar Fichero";
             this.salirToolStripMenuItem1.Click += new System.EventHandler(this.enviarFicheroToolStripMenuItem_Click);
             // 
-            // serialPort
+            // toolStripSeparator3
             // 
-            this.serialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort_DataReceived);
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(221, 6);
             // 
             // salirToolStripMenuItem2
             // 
@@ -144,10 +125,13 @@
             this.salirToolStripMenuItem2.Text = "Salir";
             this.salirToolStripMenuItem2.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
-            // toolStripSeparator3
+            // serialPort
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(221, 6);
+            this.serialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort_DataReceived);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // FormChat
             // 
@@ -180,10 +164,8 @@
         private System.IO.Ports.SerialPort serialPort;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem acercaDeToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem configConexionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem salirToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem salirToolStripMenuItem2;
     }
